@@ -196,7 +196,7 @@ X_train, X_test, y_train, y_test = train_test_split(image_dataset, labels_cat, t
 # Parameters for model
 weights = [0.1666, 0.1666, 0.1666, 0.1666, 0.1666, 0.1666]
 dice_loss = sm.losses.DiceLoss(class_weights=weights)
-focal_loss = sm.losses.CategorialFocalLoss()
+focal_loss = sm.losses.CategoricalFocalLoss()
 total_loss = dice_loss + (1 * focal_loss)
 
 IMG_HEIGHT = X_train.shape[1]
