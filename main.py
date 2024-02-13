@@ -121,3 +121,52 @@ plt.imshow(np.reshape(image_dataset[image_number], (patch_size, patch_size, 3)))
 plt.subplot(122)
 plt.imshow(np.reshape(mask_dataset[image_number], (patch_size, patch_size, 3)))
 plt.savefig('figure01.png')
+
+#########################################################################################3
+# Convert HEX to RGB array
+Building = '#3C1098'.lstrip('#')
+Building = np.array(tuple(int(Building[i:i+2], 16) for i in (0, 2, 4))) # 60, 16, 152
+
+Land = '#8429F6'.lstrip('#')
+Land = np.array(tuple(int(Land[i:i+2], 16) for i in (0, 2, 4))) #132, 41, 246
+
+Road = '#6EC1E4'.lstrip('#')
+Road = np.array(tuple(int(Road[i:i+2], 16) for i in (0, 2, 4))) #110, 193, 228
+
+Vegetation =  'FEDD3A'.lstrip('#')
+Vegetation = np.array(tuple(int(Vegetation[i:i+2], 16) for i in (0, 2, 4))) #254, 221, 58
+
+Water = 'E2A929'.lstrip('#')
+Water = np.array(tuple(int(Water[i:i+2], 16) for i in (0, 2, 4))) #226, 169, 41
+
+Unlabeled = '#9B9B9B'.lstrip('#')
+Unlabeled = np.array(tuple(int(Unlabeled[i:i+2], 16) for i in (0, 2, 4))) #155, 155, 155
+
+label = single_patch_mask
+def rgb_to_2D_label(label):
+    """
+    Suply our labale masks as input in RGB format.
+    Replace pixels with specific RGB values ...
+    """
+    label_seg = np.zeros(label.shape, dtype=np.uint8)
+    label_seg[np.all(label == Building, axis=-1)] = 0
+    label_seg[np.all(label == Land, axis=-1)] = 1
+    label_seg[np.all(label == Road, axis=-1)] = 2
+    label_seg[np.all(label == Vegetation, axis=-1)] = 3
+    label_seg[np.all(label == Water, axis=-1)] = 4
+    label_seg[np.all(label == Unlabeled, axis=-1)] = 5
+
+    label_seg = label_seg[:, :, 0]  # Just take the first channel, no need for all 3 channels
+
+    return label_seg
+
+
+labels = []
+for i in range(mask_dataset.shape[0]):
+    label = rgb_to_2D_label(mask_dataset[i])
+    labels.append(label)
+
+labels = np.array(labels)
+labels = np.expand_dims(labels, axis=3)
+
+print("Unique labels in label dataset are: ", np.unique(labels))
