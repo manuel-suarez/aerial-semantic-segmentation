@@ -264,3 +264,36 @@ plt.ylabel('IoU')
 plt.legend()
 plt.savefig('figure04.png')
 plt.close()
+
+# Metrics
+y_pred = model.predict(X_test)
+y_pred_argmax=np.argmax(y_pred, axis=3)
+y_test_argmax=np.argmax(y_test, axis=3)
+
+from keras.metrics import MeanIoU
+n_classes = 6
+IOU_keras = MeanIoU(num_classes=n_classes)
+IOU_keras.update_state(y_test_argmax, y_pred_argmax)
+print("Mean IoU = ", IOU_keras.result().numpy())
+
+# Predict on a few images
+import random
+test_img_number = random.randint(0, len(X_test))
+test_img = X_test[test_img_number]
+ground_truth=y_test_argmax[test_img_number]
+test_img_input = np.expand_dims(test_img, 0)
+prediction = (model.predict(test_img_input))
+predicted_img = np.argmax(prediction, axis=3)[0,:,:]
+
+plt.figure(figsize=(12, 8))
+plt.subplot(231)
+plt.title('Testing Image')
+plt.imshow(test_img)
+plt.subplot(232)
+plt.title('Testing Label')
+plt.imshow(ground_truth)
+plt.subplot(233)
+plt.title('Prediction on test image')
+plt.imshow(predicted_img)
+plt.savefig("figure05.png")
+plt.close()
