@@ -233,3 +233,34 @@ X_test_prepr = preprocess_input(X_test)
 model_resnet_backbone = sm.Unet(BACKBONE, encoder_weights='imagenet', classes=n_classes, activation='softmax')
 model_resnet_backbone.compile(optimizer='adam', loss='categorial_crossentropy', metrics=metrics)
 print(model_resnet_backbone.summary())
+history2 = model_resnet_backbone.fit(X_train_prepr, y_train,
+                                     batch_size=16,
+                                     epochs=100,
+                                     verbose=1,
+                                     validation_data=(X_test_prepr, y_test))
+##########################################################################
+#plot the training and validation accuracy and loss at each epoch
+history = history1
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+epochs = range(1, len(loss) + 1)
+plt.plot(epochs, loss, 'y', label='Training loss')
+plt.plot(epochs, val_loss, 'r', label='Validation loss')
+plt.title('Training and validation loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.savefig('figure03.png')
+plt.close()
+
+acc = history.history['jacard_coef']
+val_acc = history.history['val_jacard_coef']
+
+plt.plot(epochs, acc, 'y', label='Training IoU')
+plt.plot(epochs, val_acc, 'r', label='Validation IoU')
+plt.title('Training and validation IoU')
+plt.xlabel('Epochs')
+plt.ylabel('IoU')
+plt.legend()
+plt.savefig('figure04.png')
+plt.close()
