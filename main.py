@@ -183,3 +183,32 @@ plt.subplot(122)
 plt.imshow(labels[image_number][:,:,0])
 plt.savefig('figure02.png')
 plt.close()
+
+###############################################################################
+n_classes = len(np.unique(labels))
+from keras.utils import to_categorical
+labels_cat = to_categorical(labels, num_classes=n_classes)
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(image_dataset, labels_cat, test_size=.20, random_state=42)
+
+###############################################################################
+# Parameters for model
+weights = [0.1666, 0.1666, 0.1666, 0.1666, 0.1666, 0.1666]
+dice_loss = sm.losses.DiceLoss(class_weights=weights)
+focal_loss = sm.losses.CategorialFocalLoss()
+total_loss = dice_loss + (1 * focal_loss)
+
+IMG_HEIGHT = X_train.shape[1]
+IMG_WIDTH = X_train.shape[2]
+IMG_CHANNELs = X_train.shape[3]
+
+from unet_model import multi_unet_model, jacard_coef
+metrics=['accuracy', jacard_coef]
+
+def get_model():
+    return multi_unet_model(n_classes=n_classes, IMG_HEIGHT=IMG_HEIGHT, IMG_WIDTH=IMG_WIDTH, IMG_CHANNELS=IMG_CHANNELs)
+
+model = get_model()
+model.compile(optimizer='adam', loss=total_loss, metrics=metrics)
+model.summary()
