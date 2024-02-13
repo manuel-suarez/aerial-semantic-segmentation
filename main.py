@@ -220,3 +220,16 @@ history1 = model.fit(X_train, y_train,
                      epochs=100,
                      validation_data=(X_test, y_test),
                      shuffle=False)
+
+# Model with preloaded weights
+BACKBONE = 'resnet34'
+preprocess_input = sm.get_preprocessing(BACKBONE)
+
+# preprocess input
+X_train_prepr = preprocess_input(X_train)
+X_test_prepr = preprocess_input(X_test)
+
+# define model
+model_resnet_backbone = sm.Unet(BACKBONE, encoder_weights='imagenet', classes=n_classes, activation='softmax')
+model_resnet_backbone.compile(optimizer='adam', loss='categorial_crossentropy', metrics=metrics)
+print(model_resnet_backbone.summary())
