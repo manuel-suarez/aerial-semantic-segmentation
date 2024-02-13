@@ -40,7 +40,9 @@ from tensorflow.keras.metrics import MeanIoU
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 scaler = MinMaxScaler()
 
-root_directory = 'Semantic segmentation dataset/'
+home_dir = os.path.expanduser('~')
+data_dir = os.path.join(home_dir, 'data', 'aerial-dubai')
+work_dir = os.path.join(data_dir, 'Semantic segmentation dataset/')
 patch_size = 256
 
 # Read images from respective 'images' subdirectory
@@ -48,7 +50,7 @@ patch_size = 256
 # However, some images are too large and some small so, resizing will change the size of real objects
 # Therefore, we will crop them to a nearest size divisible by 256 and then divide all images into patches
 image_dataset = []
-for path, subdirs, files in os.walk(root_directory):
+for path, subdirs, files in os.walk(work_dir):
     dirname = path.split(os.path.sep)[-1]
     if dirname == 'images':
         images = os.listdir(path)
@@ -75,7 +77,7 @@ for path, subdirs, files in os.walk(root_directory):
 # Now do the same as above for masks
 # For this specific dataset we could have added masks to the above code as masks have extension png
 mask_dataset = []
-for path, subdirs, files in os.walk(root_directory):
+for path, subdirs, files in os.walk(work_dir):
     # print(path)
     dirname = path.split(os.path.sep)[-1]
     if dirname == 'masks':  # Find all 'images' directories
