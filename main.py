@@ -231,7 +231,7 @@ X_test_prepr = preprocess_input(X_test)
 
 # define model
 model_resnet_backbone = sm.Unet(BACKBONE, encoder_weights='imagenet', classes=n_classes, activation='softmax')
-model_resnet_backbone.compile(optimizer='adam', loss='categorial_crossentropy', metrics=metrics)
+model_resnet_backbone.compile(optimizer='adam', loss='categorical_crossentropy', metrics=metrics)
 print(model_resnet_backbone.summary())
 history2 = model_resnet_backbone.fit(X_train_prepr, y_train,
                                      batch_size=16,
