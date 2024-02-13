@@ -121,6 +121,7 @@ plt.imshow(np.reshape(image_dataset[image_number], (patch_size, patch_size, 3)))
 plt.subplot(122)
 plt.imshow(np.reshape(mask_dataset[image_number], (patch_size, patch_size, 3)))
 plt.savefig('figure01.png')
+plt.close()
 
 #########################################################################################3
 # Convert HEX to RGB array
@@ -170,3 +171,15 @@ labels = np.array(labels)
 labels = np.expand_dims(labels, axis=3)
 
 print("Unique labels in label dataset are: ", np.unique(labels))
+
+# Sanity check
+import random
+import numpy as np
+image_number = random.randint(0, len(image_dataset))
+plt.figure(figsize=(12, 6))
+plt.subplot(121)
+plt.imshow(image_dataset[image_number])
+plt.subplot(122)
+plt.imshow(labels[image_number][:,:,0])
+plt.savefig('figure02.png')
+plt.close()
